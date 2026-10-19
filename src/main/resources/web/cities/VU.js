@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["VU"]=[["Port-Vila","Port-Vila","18",35901],["Luganville","Luganville","13",13397],["Norsup","Norsup","16",2998],["Pango","Pango","18",2485],["Isangel","Isangel","15",1437],["Port-Olry","Port-Olry","13",1300],["Sola","Sola","07",1171],["Hog Harbour","Hog Harbour","13",1000],["Lakatoro","Lakatoro","16",705],["Saratamata","Saratamata","17",0]];

@@ -1,0 +1,15 @@
+.git
+.github
+.idea
+.mvn
+target
+out
+work-classes
+_site
+.geonames-citydata
+*.zip
+local.properties
+local.properties.*.bak
+.env
+.env.*
+!.env.example

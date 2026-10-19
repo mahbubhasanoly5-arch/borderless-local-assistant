@@ -1,0 +1,5 @@
+# Copy this file to local.properties and fill in your own local MySQL login.
+# Never share local.properties; it is excluded from Git and from the project ZIP.
+db.url=jdbc:mysql://localhost:3306/borderless_local_assistant?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo
+db.username=root
+db.password=

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f5ef">
+  <meta name="description" content="Explore destination guides, local food, getting around and location-based directions around the world.">
+  <title>Borderless Local — World Travel Guide</title>
+  <link rel="stylesheet" href="styles.css?v=world-cities-2">
+  <script src="cities500.js?v=world-cities-2" defer></script>
+  <script src="script.js?v=world-cities-2" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Borderless Local home">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span class="brand-name">Borderless <b>Local</b></span>
+      </a>
+      <div class="header-tools">
+        <span class="header-note" id="header-note">WORLD TRAVEL GUIDE</span>
+        <label class="language-wrap"><span id="language-label">ভাষা</span>
+          <select id="language" aria-labelledby="language-label">
+            <option value="bn">বাংলা</option><option value="en" selected>English</option>
+            <option value="ja">日本語</option><option value="my">မြန်မာ</option>
+            <option value="zh">中文</option><option value="ko">한국어</option>
+            <option value="vi">Tiếng Việt</option><option value="th">ไทย</option>
+            <option value="id">Bahasa Indonesia</option><option value="ms">Bahasa Melayu</option>
+            <option value="tl">Filipino</option><option value="hi">हिन्दी</option>
+            <option value="ur">اردو</option><option value="ar">العربية</option>
+            <option value="fr">Français</option><option value="de">Deutsch</option>
+            <option value="es">Español</option><option value="pt">Português</option>
+            <option value="ru">Русский</option><option value="it">Italiano</option>
+            <option value="ne">नेपाली</option><option value="si">සිංහල</option>
+            <option value="km">ខ្មែរ</option>
+          </select>
+        </label>
+      </div>
+    </header>
+    <p class="language-note" id="language-note">Interface is available in English and Bengali. Other language choices currently use English; destination names and guide details are in English.</p>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="status-dot"></span><span id="eyebrow-text">START YOUR WORLD JOURNEY HERE</span></div>
+        <h1 id="headline">See more of the world,<br><em>your own way.</em></h1>
+        <p id="intro">Choose a country and city for a starter guide to popular sights, local foods and ways to get around.</p>
+        <div class="hero-footnote"><span class="hero-spark" aria-hidden="true">✳</span> DESTINATIONS · FOOD · GETTING AROUND</div>
+      </div>
+      <div class="hero-art" aria-hidden="true"><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-sun"></div><div class="art-pin"><span></span></div><div class="art-label label-top">WORLDWIDE</div><div class="art-label label-bottom">GO YOUR OWN WAY</div><div class="art-line"></div></div>
+    </section>
+
+    <section class="search-panel picker" aria-label="Choose a destination">
+      <div class="panel-heading"><span class="panel-number">01</span><div><span class="eyebrow" id="select-kicker">PICK A DESTINATION</span><h2 id="country-label">Where would you like to go?</h2></div></div>
+      <div class="destination-row">
+        <div class="country-field-wrap">
+          <label class="destination-field"><span id="country-field-label">Country</span><input id="country" type="search" autocomplete="off" placeholder="Search countries…" aria-labelledby="country-field-label" role="combobox" aria-autocomplete="list" aria-controls="country-options-list" aria-expanded="false"></label>
+          <div id="country-picker" class="country-picker" hidden><div id="country-options-list" class="country-options-list" role="listbox" aria-label="Matching countries"></div></div>
+        </div>
+        <div class="city-field-wrap">
+          <label class="destination-field"><span id="city-field-label">City</span><input id="city" type="search" autocomplete="off" placeholder="Search cities…" aria-labelledby="city-field-label" disabled></label>
+          <div id="city-picker" class="city-picker" hidden aria-label="Available cities"><div id="city-count" class="city-picker-count"></div><div id="city-options-list" class="city-options-list" role="listbox" aria-label="Cities"></div></div>
+        </div>
+        <button id="location-button" class="location-button" type="button"><span aria-hidden="true">⌖</span><span id="location-button-text">Use my location</span></button>
+        <button id="show-button" type="button"><span id="button-text">Explore guide</span><span aria-hidden="true">↗</span></button>
+      </div>
+      <p class="location-privacy" id="location-privacy">Your location is requested only when you tap a location or directions button. Directions send your coordinates to Google Maps; this app does not save them.</p>
+      <label class="search-label" for="search" id="search-label">Search countries, cities, sights or foods</label>
+      <input id="search" type="search" autocomplete="off" placeholder="e.g. Paris, ramen, museum…">
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="results" class="results" hidden>
+      <div class="result-heading"><div><span class="eyebrow" id="guide-kicker">DESTINATION GUIDE</span><h2 id="destination-title"></h2><p id="destination-subtitle"></p></div><span class="result-index">TRAVEL NOTES <span>↘</span></span></div>
+      <div class="travel-grid">
+        <article class="info-card places-card"><div class="card-title"><span class="card-icon">✳</span><div><span class="eyebrow" id="places-kicker">SEE & DO</span><h3 id="places-title">Places to explore</h3></div></div><div id="places-list" class="entry-list"></div></article>
+        <article class="info-card food-card"><div class="card-title"><span class="card-icon">⌁</span><div><span class="eyebrow" id="food-kicker">LOCAL FLAVOURS</span><h3 id="food-title">Local foods</h3></div></div><div id="food-list" class="entry-list"></div></article>
+        <article class="info-card transit-card"><div class="card-title"><span class="card-icon transit-icon">↗</span><div><span class="eyebrow" id="transit-kicker">GETTING AROUND</span><h3 id="transit-title">Getting around</h3></div></div><div id="transit-list" class="entry-list"></div></article>
+        <article class="info-card database-guide-card no-translate" id="database-guide-card" hidden>
+          <div class="card-title"><span class="card-icon">↳</span><div><span class="eyebrow">LOCAL DATABASE</span><h3>Saved rules & transit notes</h3></div></div>
+          <div class="database-guide-columns">
+            <section><h4>Rules & etiquette</h4><div id="database-rules" class="entry-list"></div></section>
+            <section><h4>Transit guides</h4><div id="database-transit" class="entry-list"></div></section>
+          </div>
+        </article>
+      </div>
+      <p class="accuracy-note" id="accuracy-note">This is starter trip-planning information. Transit, opening hours, tickets, visa and safety rules can change. Check official local or transport sources before travelling.</p>
+    </section>
+    <section class="coverage-note"><span class="eyebrow">GROWING WORLD GUIDE</span><p id="coverage-copy">A starter guide to selected popular countries. This is not a complete world directory or a live route planner.</p></section>
+    <footer><span class="footer-brand">B/L</span><span id="footer-copy">Plan your trip and verify details before you travel</span><span class="footer-line"></span><span>WORLD · CITY · CULTURE</span><a class="geo-credit" href="https://www.geonames.org/" target="_blank" rel="noopener">City data: GeoNames CC BY 4.0</a></footer>
+  </main>
+</body>
+</html>

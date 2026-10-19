@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["WF"]=[["Mata-Utu","Mata-Utu","98613",1200],["Alele","Alele","98613",629],["Falaleu","Falaleu","98613",626],["Utufua","Utufua","98613",622],["Liku","Liku","98613",613],["Halalo","Halalo","98613",563],["Leava","Leava","98612",480],["Alo","Alo","98611",239]];

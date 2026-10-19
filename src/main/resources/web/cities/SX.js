@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["SX"]=[["Cul de Sac","Cul de Sac","00",8467],["Lower Prince’s Quarter","Lower Prince's Quarter","00",8000],["Koolbaai","Koolbaai","00",6000],["Little Bay","Little Bay","",5581],["Upper Prince’s Quarter","Upper Prince's Quarter","00",4020],["Philipsburg","Philipsburg","",1400],["Simson Bay Village","Simson Bay Village","00",700]];

@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["SH"]=[["Georgetown","Georgetown","01",5012],["Edinburgh of the Seven Seas","Edinburgh of the Seven Seas","03",2860],["Half Tree Hollow","Half Tree Hollow","02",1034],["St. Paul's","St. Paul's","02",928],["Longwood","Longwood","02",765],["Jamestown","Jamestown","02",637]];

@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["MF"]=[["Grand-Case","Grand-Case","00",6333],["Concordia","Concordia","00",6102],["Marigot","Marigot","00",5700],["Sandy Ground","Sandy Ground","00",3493],["Quartier d’Orléans","Quartier d'Orleans","00",3385],["Colombier","Colombier","00",3335],["Agrément","Agrement","00",1876],["Oyster Pond","Oyster Pond","",1830],["Saint-James","Saint-James","00",1739]];

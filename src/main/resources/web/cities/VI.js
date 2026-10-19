@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["VI"]=[["Saint Croix","Saint Croix","010",50601],["Charlotte Amalie","Charlotte Amalie","030",20000],["Tutu","Tutu","030",5519],["Cruz Bay","Cruz Bay","020",2743],["Christiansted","Christiansted","010",1866],["Altona","Altona","030",1316],["Coral Bay","Coral Bay","020",615],["Frederiksted","Frederiksted","010",528]];

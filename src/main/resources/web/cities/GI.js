@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["GI"]=[["Gibraltar","Gibraltar","00",26544],["Reclamation Areas","Reclamation Areas","",13690],["South District","South District","",5380],["Town Area","Town Area","",3238],["Upper Town","Upper Town","",2483],["Sandpits","Sandpits","",2020],["Catalan Bay","Catalan Bay","",526]];

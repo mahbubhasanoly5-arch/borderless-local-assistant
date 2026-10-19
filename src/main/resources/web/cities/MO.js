@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["MO"]=[["Macau","Macau","02",649335],["Taipa","Taipa","11875159",112051],["Sé","Se","",52200],["Luhuan","Luhuan","11875161",36384],["Zhuojiacun","Zhuojiacun","11875159",24000],["Lai Chi Van","Lai Chi Van","11875161",22125],["Jiu’ao","Jiu'ao","11875161",850],["Cotai","Cotai","",300]];

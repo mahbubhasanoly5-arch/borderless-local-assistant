@@ -1,0 +1,1 @@
+window.GEONAMES_CITIES["JE"]=[["Saint Helier","Saint Helier","3237864",28000],["St Lawrence","St Lawrence","",5561],["St Martin","St Martin","3237716",3948],["Trinity","Trinity","3237530",3355],["Saint John","Saint John","3237497",3051],["Le Hocq","Le Hocq","3237072",0]];
