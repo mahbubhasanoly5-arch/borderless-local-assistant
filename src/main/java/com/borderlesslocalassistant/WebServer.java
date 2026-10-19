@@ -11,7 +11,6 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URLEncoder;
 import java.net.URLDecoder;
@@ -33,7 +32,11 @@ import java.util.regex.Pattern;
 
 /** Serves the local web interface and a small read-only JSON API. */
 public final class WebServer {
-    private static final int PORT = Integer.parseInt(System.getProperty("server.port", "8080"));
+    private static final int PORT = Integer.parseInt(System.getenv().getOrDefault(
+            "PORT", System.getProperty("server.port", "8080")));
+    private static final Pattern GUIDE_COUNTRY_BLOCK = Pattern.compile(
+            "\\{country:'([^']+)',region:'[^']+',cities:\\[([\\s\\S]*?)\\n \\]\\}");
+    private static final Pattern GUIDE_CITY = Pattern.compile("\\{name:'([^']+)',sights:\\[");
     private static final LocalAssistantService SERVICE = new LocalAssistantService();
     private static final HttpClient TRANSLATION_CLIENT = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(8)).build();
@@ -47,15 +50,38 @@ public final class WebServer {
     }
 
     public static void main(String[] args) throws IOException {
-        HttpServer server = HttpServer.create(
-                new InetSocketAddress(InetAddress.getLoopbackAddress(), PORT), 0);
+        // Bind to all interfaces so a cloud platform's reverse proxy can reach the app.
+        HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
+        server.createContext("/health", WebServer::handleHealth);
         server.createContext("/api/cities", WebServer::handleCities);
         server.createContext("/api/translate", WebServer::handleTranslate);
         server.createContext("/", WebServer::handleStatic);
         server.setExecutor(Executors.newFixedThreadPool(8));
         server.start();
-        System.out.printf("Borderless Local Assistant is running at http://localhost:%d%n", PORT);
-        System.out.println("This server accepts connections from this computer only. Press Ctrl+C to stop.");
+        System.out.printf("Borderless Local Assistant is listening on port %d%n", PORT);
+        System.out.println("Press Ctrl+C to stop.");
+    }
+
+    private static void handleHealth(HttpExchange exchange) throws IOException {
+        try {
+            if (!"/health".equals(exchange.getRequestURI().getPath())) {
+                exchange.sendResponseHeaders(404, -1);
+                return;
+            }
+            if (!"GET".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().set("Allow", "GET");
+                exchange.sendResponseHeaders(405, -1);
+                return;
+            }
+            byte[] body = "ok".getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=utf-8");
+            exchange.getResponseHeaders().set("Cache-Control", "no-store");
+            exchange.getResponseHeaders().set("X-Content-Type-Options", "nosniff");
+            exchange.sendResponseHeaders(200, body.length);
+            exchange.getResponseBody().write(body);
+        } finally {
+            exchange.close();
+        }
     }
 
     private static void handleTranslate(HttpExchange exchange) throws IOException {
@@ -337,6 +363,15 @@ public final class WebServer {
             return;
         }
         String path = exchange.getRequestURI().getPath();
+        if ("/robots.txt".equals(path)) {
+            sendText(exchange, "text/plain; charset=utf-8",
+                    "User-agent: *\nAllow: /\nSitemap: " + publicBaseUrl() + "sitemap.xml\n");
+            return;
+        }
+        if ("/sitemap.xml".equals(path)) {
+            sendText(exchange, "application/xml; charset=utf-8", createSitemap());
+            return;
+        }
         if ("/".equals(path)) path = "/index.html";
         if (!(path.equals("/index.html") || path.equals("/styles.css")
                 || path.equals("/app.js") || path.equals("/script.js")
@@ -352,6 +387,21 @@ public final class WebServer {
                 return;
             }
             byte[] bytes = input.readAllBytes();
+            if ("/index.html".equals(path)) {
+                String html = new String(bytes, StandardCharsets.UTF_8);
+                if (!html.contains("rel=\"canonical\"")) {
+                    html = html.replace("</head>", "  <link rel=\"canonical\" href=\""
+                            + escapeHtml(publicBaseUrl()) + "\">\n</head>");
+                }
+                String verification = System.getenv().getOrDefault("GOOGLE_SITE_VERIFICATION", "").trim();
+                if (!verification.isBlank() && !html.contains("name=\"google-site-verification\"")) {
+                    html = html.replace("</head>", "  <meta name=\"google-site-verification\" content=\""
+                            + escapeHtml(verification) + "\">\n</head>");
+                }
+                if (!html.equals(new String(bytes, StandardCharsets.UTF_8))) {
+                    bytes = html.getBytes(StandardCharsets.UTF_8);
+                }
+            }
             String contentType = path.endsWith(".css") ? "text/css; charset=utf-8"
                     : path.endsWith(".js") ? "text/javascript; charset=utf-8" : "text/html; charset=utf-8";
             exchange.getResponseHeaders().set("Content-Type", contentType);
@@ -363,5 +413,58 @@ public final class WebServer {
         } finally {
             exchange.close();
         }
+    }
+
+    private static void sendText(HttpExchange exchange, String contentType, String body) throws IOException {
+        try {
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", contentType);
+            exchange.getResponseHeaders().set("Cache-Control", "public, max-age=300");
+            exchange.getResponseHeaders().set("X-Content-Type-Options", "nosniff");
+            exchange.sendResponseHeaders(200, bytes.length);
+            exchange.getResponseBody().write(bytes);
+        } finally {
+            exchange.close();
+        }
+    }
+
+    private static String publicBaseUrl() {
+        String configured = System.getenv().getOrDefault("PUBLIC_BASE_URL", "").trim();
+        if (!configured.isBlank()) return configured.endsWith("/") ? configured : configured + "/";
+        String railwayDomain = System.getenv().getOrDefault("RAILWAY_PUBLIC_DOMAIN", "").trim();
+        if (!railwayDomain.isBlank()) return "https://" + railwayDomain.replaceAll("^https?://", "") + "/";
+        return "http://localhost:" + PORT + "/";
+    }
+
+    private static String createSitemap() throws IOException {
+        List<String> urls = new ArrayList<>();
+        String baseUrl = publicBaseUrl();
+        urls.add(baseUrl);
+        try (var input = WebServer.class.getResourceAsStream("/web/script.js")) {
+            if (input == null) throw new IOException("Travel guide data is missing.");
+            String script = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+            Matcher countries = GUIDE_COUNTRY_BLOCK.matcher(script);
+            while (countries.find()) {
+                String country = countries.group(1);
+                Matcher cities = GUIDE_CITY.matcher(countries.group(2));
+                while (cities.find()) {
+                    urls.add(baseUrl + "?country=" + URLEncoder.encode(country, StandardCharsets.UTF_8)
+                            + "&city=" + URLEncoder.encode(cities.group(1), StandardCharsets.UTF_8));
+                }
+            }
+        }
+        StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                .append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+        for (String url : urls) xml.append("  <url><loc>").append(escapeXml(url)).append("</loc></url>\n");
+        return xml.append("</urlset>\n").toString();
+    }
+
+    private static String escapeXml(String value) {
+        return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                .replace("\"", "&quot;").replace("'", "&apos;");
+    }
+
+    private static String escapeHtml(String value) {
+        return value.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
     }
 }

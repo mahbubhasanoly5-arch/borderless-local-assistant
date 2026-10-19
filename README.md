@@ -30,15 +30,23 @@ Java 21 + Maven + MySQL backend-সহ local travel guide। Browser-এ GeoName
 - `GET /api/cities/{id}?language=bn` — database-এর city rules ও transit guides। API পুরোনো database data পড়ে; worldwide starter catalogue database পরিবর্তন করে না।
 - `POST /api/translate` — UI ও public guide text-কে free MyMemory service দিয়ে অনুবাদ করে।
 
-Server কেবল এই কম্পিউটারের loopback address-এ শোনে; local network-এর অন্য device থেকে সংযোগ নেয় না। Database API শুধু GET গ্রহণ করে; translation proxy-তে শুধু local page-এর POST অনুমোদিত।
+Local run-এ server `PORT` environment variable না থাকলে `server.port` বা `8080` ব্যবহার করে। Deployment-এ platform-এর `PORT` গ্রহণ করে এবং public proxy থেকে request নেয়। `/health` শুধু server সচল কি না জানায়; database সচলতার প্রমাণ নয়। Database API শুধু GET গ্রহণ করে; translation proxy-তে শুধু একই origin-এর POST অনুমোদিত।
 
 ## Online publish ও Google Search
 
-এই project-এর browser app GitHub Pages-এ static site হিসেবে প্রকাশের workflow আছে: `.github/workflows/deploy-pages.yml`। এটি শুধু `src/main/resources/web` publish করে; `local.properties`, MySQL credentials বা database data publish করে না। Java/MySQL backend আগের মতো local-এই থাকে। Published site-এ অনুবাদ backend না থাকলে browser free MyMemory endpoint fallback হিসেবে ব্যবহার করে; এজন্য internet connection ও provider availability দরকার।
+### পূর্ণ Java + MySQL deployment
 
-প্রকাশের জন্য project-টি নিজের GitHub repository-তে push করুন, repository **Settings → Pages → Build and deployment → Source → GitHub Actions** বেছে নিন, তারপর `main` বা `master` branch-এ workflow চালান। Workflow public GitHub Pages URL থেকে `robots.txt` ও `sitemap.xml` তৈরি করে; sitemap-এ homepage ও ৮৮টি curated city guide-এর URL থাকে। অন্য directory city-গুলো searchable হলেও তাদের আলাদা curated guide page নেই।
+এই app-এর জন্য Railway প্রস্তাব করছি: Java service, private-network MySQL service, persistent volume ও backup support একই project-এ রাখা যায়। Railway Hobby বর্তমানে **$5/month minimum**, এতে $5 resource usage অন্তর্ভুক্ত; ব্যবহারে $5 ছাড়ালে অতিরিক্ত বিল হয়। Trial-এর $5 একবারের credit স্থায়ী free hosting নয়; trial শেষ হলে stateful data রাখার শর্তও থাকে। Account, billing plan ও payment Railway-তে তোমাকেই সম্পন্ন করতে হবে। [Railway pricing](https://docs.railway.com/pricing) · [MySQL setup](https://docs.railway.com/databases/mysql) · [Database backups](https://docs.railway.com/databases)
 
-Site public হলে Google Search Console-এ site-এর URL-prefix property যোগ করে ownership verify করুন, তারপর `https://<আপনার-public-site>/sitemap.xml` submit করুন। Sitemap submit করা crawl/indexing-এর অনুরোধ; Google কখন বা কোন page index করবে তা নিশ্চিত করে না। Domain, GitHub repository এবং Search Console ownership user-এর account-এ করতে হবে।
+Project-এ Railway-এর Docker build-এর জন্য `Dockerfile` আছে। Java server Railway-এর `PORT`-এ bind করে, `/health` healthcheck দেয়, আর `/robots.txt`, `/sitemap.xml` ও canonical homepage serve করে। MySQL-এর `MYSQLHOST`, `MYSQLPORT`, `MYSQLDATABASE`, `MYSQLUSER`, `MYSQLPASSWORD` variables app service-এ reference করে দিতে হবে; password শুধু Railway Variables-এ রাখবে, repository বা chat-এ নয়। Healthcheck path `/health` এবং Railway Networking থেকে public domain চালু করতে হবে। [Railway Dockerfile build](https://docs.railway.com/builds/dockerfiles) · [Railway healthcheck](https://docs.railway.com/deployments/healthchecks) · [Railway variables](https://docs.railway.com/variables)
+
+**Database data:** source project-এ schema/migration SQL নেই, আর local database-এর data project folder-এ নেই। তাই deploy-এর আগে local MySQL থেকে schema ও data-সহ backup নিতে হবে, সেই backup Railway MySQL-এ import করতে হবে, এবং local database অক্ষত রাখতে হবে। Empty MySQL-এ app চালালেই API কাজ করবে না। এই project-এ automatic table creation বা destructive migration নেই; এখানে কোনো DB export/import চালানো হয়নি।
+
+এই folder-এ Git remote এখনো নেই. Railway deployment-এ GitHub repository select করতে হয়; project-টি repository-তে push করে Railway-তে সেই repo/branch যুক্ত করতে হবে। GitHub Pages workflow কেবল manual static preview-এর জন্য, backend/database deploy করে না—পূর্ণ app-এর public URL হিসেবে সেটি ব্যবহার কোরো না।
+
+### Google Search
+
+Page title ও meta description আছে। Server runtime-এ public URL থেকে canonical link, `robots.txt` এবং homepage + curated city guide-গুলোর sitemap বানায়; অন্য searchable directory city-গুলোর আলাদা curated guide page নেই। Google Search Console-এ public URL-prefix property যোগ করে HTML verification চাইলে Google-এর দেওয়া token Railway-র `GOOGLE_SITE_VERIFICATION` variable-এ রাখবে; এরপর deploy হয়ে গেলে verification complete করে `https://<public-domain>/sitemap.xml` জমা দেবে। Google account-এ login ও ownership verify করা তোমাকেই করতে হবে। Sitemap submit বা indexing request Google-কে crawl করার অনুরোধ দেয়, indexing নিশ্চিত করে না; ফল আসতে সময় লাগতে পারে। [Search Console start guide](https://developers.google.com/search/docs/monitor-debug/search-console-start) · [Sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap)
 
 ## Project-এর অংশ
 
@@ -51,4 +59,4 @@ Site public হলে Google Search Console-এ site-এর URL-prefix property 
 
 ## Build
 
-Java 21 ও Maven install থাকলে project root-এ `mvn compile` চালিয়ে compile করা যায়। Browser app চালাতে `WebServer` run করতে হবে।
+Java 21 ও Maven install থাকলে project root-এ `mvn compile` চালিয়ে compile করা যায়। Container build-এ Maven 3.9 ও Java 21 ব্যবহার হয়। Browser app চালাতে `WebServer` run করতে হবে।

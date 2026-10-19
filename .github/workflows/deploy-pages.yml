@@ -1,8 +1,6 @@
-name: Publish Borderless Local
+name: Optional static-only preview
 
 on:
-  push:
-    branches: [main, master]
   workflow_dispatch:
 
 permissions:
