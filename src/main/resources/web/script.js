@@ -718,6 +718,44 @@ function renderPublicLocalGuide(d,c){
  add('local-rules-list',bn?'সরকারি travel advice':'Government travel advice',bn?'GOV.UK থেকে destination বেছে local laws ও safety দেখুন। Entry advice UK passport অনুযায়ী হতে পারে; নিজের embassy-র তথ্যও দেখুন।':'Select your destination in GOV.UK advice for local laws and safety. Entry advice may be for UK passports; also consult your own embassy.','https://www.gov.uk/foreign-travel-advice','GOV.UK travel advice');
  add('student-guide-list',bn?'কাজের অনুমতি':'Work permission',bn?'Student visa মানেই কাজের অনুমতি নয়। কাজ শুরুর আগে immigration authority ও university থেকে permission, hours ও job restrictions যাচাই করুন।':'Do not assume a student visa permits work. Verify permission, hours and job restrictions with immigration authorities and your university before starting.');
  add('student-guide-list',bn?'বসবাস ও পড়াশোনা':'Residence and study checklist',bn?'Address registration, residence renewal, attendance, health insurance, housing contract ও university support contact যাচাই করে রাখুন।':'Check address registration, residence renewal, attendance requirements, health insurance, housing contracts and your university’s support contacts.');
+ const publicCountryRules={
+  Bangladesh:{
+   en:'FCDO advises keeping copies of your passport photo page and visa, and dressing modestly. Treat dress guidance as cultural advice. Follow destination authorities for the applicable law.',
+   bn:'FCDO passport-এর photo page ও visa-এর copy রাখা এবং শালীন পোশাক পরার পরামর্শ দেয়। পোশাকের বিষয়টি সাংস্কৃতিক পরামর্শ; প্রযোজ্য আইনের জন্য স্থানীয় কর্তৃপক্ষ দেখুন।',
+   url:'https://www.gov.uk/foreign-travel-advice/bangladesh/safety-and-security'
+  },
+  India:{
+   en:'Alcohol rules differ by state. FCDO reports that smoking is illegal in most public places. Check the rules for your state and venue, and respect religious-site dress requirements.',
+   bn:'Alcohol-এর নিয়ম রাজ্যভেদে আলাদা। FCDO অনুযায়ী অধিকাংশ public place-এ smoking নিষিদ্ধ। আপনার রাজ্য ও venue-এর বিধি এবং ধর্মীয় স্থানের পোশাকের নিয়ম যাচাই করুন।',
+   url:'https://www.gov.uk/foreign-travel-advice/india/safety-and-security'
+  },
+  Thailand:{
+   en:'FCDO states that flying an unregistered drone is illegal; registration requirements also apply on entry or purchase. Do not give your passport to rental businesses as a deposit. Read the full official guidance before hiring or flying.',
+   bn:'FCDO অনুযায়ী unregistered drone ওড়ানো বেআইনি; দেশে প্রবেশ বা কেনার পর registration-এর শর্তও আছে। Rental business-এ deposit হিসেবে passport জমা দেবেন না। ব্যবহার করার আগে পুরো official guidance পড়ুন।',
+   url:'https://www.gov.uk/foreign-travel-advice/thailand/safety-and-security'
+  }
+ };
+ const publicStudentRules={
+  Canada:{
+   en:'Eligible students may work off campus up to 24 hours per week during regular terms. This is not permission for every student: permit conditions, enrolment and other eligibility requirements apply. Check IRCC before starting work.',
+   bn:'যোগ্য শিক্ষার্থীরা regular term-এ off-campus সর্বোচ্চ সপ্তাহে 24 ঘণ্টা কাজ করতে পারেন। সবার জন্য অনুমতি নয়: permit, enrolment ও অন্যান্য শর্ত প্রযোজ্য। কাজ শুরুর আগে IRCC যাচাই করুন।',
+   url:'https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada/work/work-off-campus.html'
+  },
+  'United Kingdom':{
+   en:'Term-time work permission depends on your course and sponsor: qualifying degree-level students may have a 20-hour limit, qualifying below-degree students 10 hours, and other study may permit no work. Confirm your own immigration conditions and prohibited job types.',
+   bn:'Term-time কাজের অনুমতি course ও sponsor-এর ওপর নির্ভর করে: যোগ্য degree-level শিক্ষার্থীর 20 ঘণ্টা, below-degree-এর 10 ঘণ্টা সীমা হতে পারে; অন্য ক্ষেত্রে কাজের অনুমতি নাও থাকতে পারে। নিজের visa conditions ও নিষিদ্ধ কাজ যাচাই করুন।',
+   url:'https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-student'
+  },
+  Australia:{
+   en:'Most student visa holders have a 48-hour per fortnight work limit while their course is in session. Course-start restrictions and exceptions, including certain research degrees, apply. Read the conditions attached to your own visa.',
+   bn:'অধিকাংশ student visa holder-এর course চলাকালে প্রতি fortnight-এ 48 ঘণ্টা কাজের সীমা আছে। Course শুরুর শর্ত ও কিছু research degree-র exception প্রযোজ্য। নিজের visa conditions পড়ুন।',
+   url:'https://immi.homeaffairs.gov.au/visas/already-have-a-visa/check-visa-details-and-conditions/see-your-visa-conditions?vcid=18'
+  }
+ };
+ const rule=publicCountryRules[d.country];
+ if(rule)add('local-rules-list',d.country+(bn?' · সরকারি travel advice':' · government travel advice'),(bn?rule.bn:rule.en)+(bn?' তথ্য দেখা হয়েছে: 22 October 2026। UK passport-ভিত্তিক entry advice আপনার ক্ষেত্রে ভিন্ন হতে পারে।':' Source checked: 22 October 2026. UK-passport entry advice may differ for you.'),rule.url,'FCDO · '+d.country);
+ const student=publicStudentRules[d.country];
+ if(student)add('student-guide-list',d.country+(bn?' · শিক্ষার্থীর কাজ':' · student work'),(bn?student.bn:student.en)+(bn?' সূত্র দেখা হয়েছে: 22 October 2026।':' Source checked: 22 October 2026.'),student.url,bn?'Official immigration source':'Official immigration source');
  if(d.country==='Japan'){
   add('local-rules-list',bn?'Japan: পরিচয়পত্র ও smoking':'Japan: identification and smoking',bn?'JNTO visitor guide passport সঙ্গে রাখা এবং designated smoking area ব্যবহারের কথা বলে। Resident-এর নিয়ম immigration source-এ দেখুন।':'JNTO’s visitor guide advises carrying your passport and using designated smoking areas. Residents should check immigration guidance for their status.','https://www.japan.travel/en/plan/local-laws/','JNTO · Local laws');
   add('student-guide-list',bn?'Japan: student work ও residence':'Japan: student work and residence',bn?'Part-time কাজের আগে অতিরিক্ত activity permission প্রয়োজন। আপনার permit-এর hours ও restrictions, residence expiry ও registration Immigration Services Agency-তে যাচাই করুন।':'Part-time student work requires permission for activities outside the student status. Check your permit’s hours and restrictions, residence expiry and registration with the Immigration Services Agency.','https://www.moj.go.jp/isa/support/guidance/index.html?hl=en','Japan Immigration Services Agency');
