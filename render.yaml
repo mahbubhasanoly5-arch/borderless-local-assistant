@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: borderless-local-assistant
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms64m -Xmx256m
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
