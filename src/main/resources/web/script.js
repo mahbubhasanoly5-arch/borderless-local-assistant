@@ -698,6 +698,31 @@ async function renderDatabaseGuide(cityName){
   card.hidden=true;
  }
 }
+function renderPublicLocalGuide(d,c){
+ const bn=language.value==='bn';
+ const add=(id,title,text,url,label)=>{
+  const row=document.createElement('div');row.className='entry';
+  const h=document.createElement('h4');h.textContent=title;row.append(h);
+  const p=document.createElement('p');p.textContent=text;row.append(p);
+  if(url){const a=document.createElement('a');a.className='entry-link';a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=(label||(bn?'তথ্য খুলুন':'Open information'))+' ↗';row.append(a)}
+  $(id).append(row);
+ };
+ ['local-guide-list','local-rules-list','student-guide-list'].forEach(id=>$(id).replaceChildren());
+ const maps=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q+' in '+c.name+', '+d.country);
+ add('local-guide-list',bn?'পৌঁছানো ও চলাফেরা':'Arrival and getting around',bn?'উপরের transport guide দেখুন। যাত্রার আগে operator-এর timetable, ticket ও শেষ service যাচাই করুন।':'Use the transport guide above. Check the operator’s timetable, ticket conditions and last service before travelling.');
+ add('local-guide-list',bn?'Tourist information centre':'Visitor information centre',bn?'Maps-এ visitor centre খুঁজুন। যাওয়ার আগে খোলার সময় ও official পরিচয় যাচাই করুন।':'Find visitor information centres on Maps. Confirm opening hours and official status before visiting.',maps('tourist information centre'),bn?'Maps-এ খুঁজুন':'Find on Maps');
+ add('local-guide-list',bn?'দৈনন্দিন প্রয়োজন':'Everyday essentials',bn?'কাছাকাছি pharmacy, grocery ও service খুঁজুন। Maps-এর listing এই app যাচাই করেনি।':'Find nearby pharmacies, groceries and services. Map listings are not vetted by this app.',maps('pharmacy supermarket'),bn?'কাছাকাছি খুঁজুন':'Find nearby services');
+ add('local-rules-list',bn?'নিয়ম যাচাইয়ের checklist':'Rules verification checklist',bn?'এটি সাধারণ checklist, এই দেশের সম্পূর্ণ আইন নয়। দেশভিত্তিক যাচাই করা নিয়ম নিচে থাকলে আলাদাভাবে source দেওয়া হয়েছে।':'This is a general checklist, not a complete statement of local law. Country-specific information, where available below, includes its official source.');
+ add('local-rules-list',bn?'Visa, customs ও ওষুধ':'Entry, customs and medicines',bn?'নিজের passport অনুযায়ী visa ও stay limit, customs declaration এবং সঙ্গে আনা medicine-এর অনুমতি destination embassy/customs-এর কাছে যাচাই করুন।':'Check visa and stay limits for your passport, customs declarations and permission for medicines with the destination embassy and customs authority.');
+ add('local-rules-list',bn?'স্থানীয় আচরণ ও restrictions':'Local conduct and restrictions',bn?'Smoking, alcohol, photography, dress, religious site, driving ও public transport-এর স্থানীয় বিধি ও posted signs যাচাই করুন।':'Check local rules and posted signs for smoking, alcohol, photography, dress, religious sites, driving and public transport.');
+ add('local-rules-list',bn?'সরকারি travel advice':'Government travel advice',bn?'GOV.UK থেকে destination বেছে local laws ও safety দেখুন। Entry advice UK passport অনুযায়ী হতে পারে; নিজের embassy-র তথ্যও দেখুন।':'Select your destination in GOV.UK advice for local laws and safety. Entry advice may be for UK passports; also consult your own embassy.','https://www.gov.uk/foreign-travel-advice','GOV.UK travel advice');
+ add('student-guide-list',bn?'কাজের অনুমতি':'Work permission',bn?'Student visa মানেই কাজের অনুমতি নয়। কাজ শুরুর আগে immigration authority ও university থেকে permission, hours ও job restrictions যাচাই করুন।':'Do not assume a student visa permits work. Verify permission, hours and job restrictions with immigration authorities and your university before starting.');
+ add('student-guide-list',bn?'বসবাস ও পড়াশোনা':'Residence and study checklist',bn?'Address registration, residence renewal, attendance, health insurance, housing contract ও university support contact যাচাই করে রাখুন।':'Check address registration, residence renewal, attendance requirements, health insurance, housing contracts and your university’s support contacts.');
+ if(d.country==='Japan'){
+  add('local-rules-list',bn?'Japan: পরিচয়পত্র ও smoking':'Japan: identification and smoking',bn?'JNTO visitor guide passport সঙ্গে রাখা এবং designated smoking area ব্যবহারের কথা বলে। Resident-এর নিয়ম immigration source-এ দেখুন।':'JNTO’s visitor guide advises carrying your passport and using designated smoking areas. Residents should check immigration guidance for their status.','https://www.japan.travel/en/plan/local-laws/','JNTO · Local laws');
+  add('student-guide-list',bn?'Japan: student work ও residence':'Japan: student work and residence',bn?'Part-time কাজের আগে অতিরিক্ত activity permission প্রয়োজন। আপনার permit-এর hours ও restrictions, residence expiry ও registration Immigration Services Agency-তে যাচাই করুন।':'Part-time student work requires permission for activities outside the student status. Check your permit’s hours and restrictions, residence expiry and registration with the Immigration Services Agency.','https://www.moj.go.jp/isa/support/guidance/index.html?hl=en','Japan Immigration Services Agency');
+ }
+}
 function renderDestination(){
  const d=destinations.find(item=>item.country===country.value);
  if(!d||!city.value)return;
@@ -723,6 +748,7 @@ function renderDestination(){
  const target=$('transit-list');target.replaceChildren();
  if(c.featured)c.transit.forEach((text,index)=>{const item=document.createElement('div');item.className='entry';const h=document.createElement('h4');h.textContent=index===0?(language.value==='bn'?'শহরের ভেতরে':'Around the city'):(language.value==='bn'?'পৌঁছানো ও সংযোগ':'Arriving / connecting');item.append(h);const p=document.createElement('p');p.textContent=text;item.append(p);target.append(item)});
  else renderDirectoryLinks('transit-list',[{title:'Public transport and routes',query:'public transport and transit routes'}],c.name+', '+d.country);
+ renderPublicLocalGuide(d,c);
  renderDatabaseGuide(c.name);
  if(d.country==='Myanmar'){
   const warning=document.createElement('div');warning.className='entry directory-entry';

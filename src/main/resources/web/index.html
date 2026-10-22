@@ -9,11 +9,17 @@
   <link rel="stylesheet" href="styles.css?v=world-cities-2">
   <script src="cities500.js?v=world-cities-2" defer></script>
   <script src="script.js?v=world-cities-2" defer></script>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Borderless Local">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <script src="install.js" defer></script>
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
-      <a class="brand" href="/" aria-label="Borderless Local home">
+      <a class="brand" href="./" aria-label="Borderless Local home">
         <span class="brand-mark" aria-hidden="true"><span></span></span>
         <span class="brand-name">Borderless <b>Local</b></span>
       </a>
@@ -53,6 +59,10 @@
       <div><span class="eyebrow">TAKE THE GUIDE WITH YOU</span><h2>Borderless Local for Android</h2><p>Free preview app · Android only · about 154 MB. Download the APK, open it on your Android phone, then choose Install. This preview is not on Google Play; online photos, translation and Maps need internet.</p><p lang="bn">Android ফোনে APK download করে খুলে Install করো। iPhone-এ APK চলবে না। এটি পরীক্ষামূলক সংস্করণ।</p></div>
       <a class="android-download-button" href="https://github.com/mahbubhasanoly5-arch/borderless-local-assistant/releases/download/v0.3.0-preview/Borderless-Local-website-debug.apk">Download Android App ↓</a>
     </section>
+    <section class="android-download" aria-label="Use on iPhone">
+      <div><span class="eyebrow">YOUR IPHONE TRAVEL COMPANION</span><h2>Keep Borderless Local on your iPhone</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. Turn on Open as Web App if shown, then tap Add. Your guide opens from its own icon. Internet is required.</p><p lang="bn">Safari-তে খোলো → Share → Add to Home Screen → Add। আলাদা icon থেকে guide খুলতে পারবে। Internet লাগবে।</p><p id="install-status" role="status" aria-live="polite"></p></div>
+      <button class="android-download-button" id="install-app" type="button" hidden>Install web app</button>
+    </section>
     <section class="search-panel picker" aria-label="Choose a destination">
       <div class="panel-heading"><span class="panel-number">01</span><div><span class="eyebrow" id="select-kicker">PICK A DESTINATION</span><h2 id="country-label">Where would you like to go?</h2></div></div>
       <div class="destination-row">
@@ -79,6 +89,9 @@
         <article class="info-card places-card"><div class="card-title"><span class="card-icon">✳</span><div><span class="eyebrow" id="places-kicker">SEE & DO</span><h3 id="places-title">Places to explore</h3></div></div><div id="places-list" class="entry-list"></div></article>
         <article class="info-card food-card"><div class="card-title"><span class="card-icon">⌁</span><div><span class="eyebrow" id="food-kicker">LOCAL FLAVOURS</span><h3 id="food-title">Local foods</h3></div></div><div id="food-list" class="entry-list"></div></article>
         <article class="info-card transit-card"><div class="card-title"><span class="card-icon transit-icon">↗</span><div><span class="eyebrow" id="transit-kicker">GETTING AROUND</span><h3 id="transit-title">Getting around</h3></div></div><div id="transit-list" class="entry-list"></div></article>
+        <article class="info-card no-translate"><div class="card-title"><span class="card-icon">⌖</span><div><span class="eyebrow">EVERYDAY LOCAL GUIDE</span><h3>Local guide · স্থানীয় গাইড</h3></div></div><div id="local-guide-list" class="entry-list"></div></article>
+        <article class="info-card no-translate"><div class="card-title"><span class="card-icon">§</span><div><span class="eyebrow">RULES & REGULATIONS</span><h3>Rules · নিয়ম ও আচরণ</h3></div></div><div id="local-rules-list" class="entry-list"></div></article>
+        <article class="info-card no-translate"><div class="card-title"><span class="card-icon">↳</span><div><span class="eyebrow">STUDYING ABROAD</span><h3>Student guide · শিক্ষার্থী গাইড</h3></div></div><div id="student-guide-list" class="entry-list"></div></article>
         <article class="info-card database-guide-card no-translate" id="database-guide-card" hidden>
           <div class="card-title"><span class="card-icon">↳</span><div><span class="eyebrow">LOCAL DATABASE</span><h3>Saved rules & transit notes</h3></div></div>
           <div class="database-guide-columns">
