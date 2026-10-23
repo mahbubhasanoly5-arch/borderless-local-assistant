@@ -184,3 +184,6 @@ footer span:nth-child(2){letter-spacing:0;font-size:9px}
 @media(max-width:760px){.destination-row{grid-template-columns:1fr 1fr}.destination-row #location-button{grid-column:1}.destination-row #show-button{grid-column:2}.picker .destination-row button{min-width:0;width:100%;padding:0 8px}}
 @media(max-width:560px){.destination-row{grid-template-columns:1fr}.destination-row #location-button,.destination-row #show-button{grid-column:auto}.picker .destination-row button{height:46px}}
 @media(max-width:560px){.database-guide-columns{grid-template-columns:1fr;gap:0}}
+
+#install-app[hidden],#install-help[hidden]{display:none!important}
+#install-help{padding:14px 16px;background:#fff;border:1px solid #b7cbb8;border-radius:10px;line-height:1.7;font-size:14px;max-width:100%}#install-help:focus{outline:2px solid var(--green);outline-offset:3px}#install-app:disabled{opacity:.65;cursor:wait}

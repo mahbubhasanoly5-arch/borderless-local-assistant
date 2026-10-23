@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f3f5ef">
   <meta name="description" content="Explore destination guides, local food, getting around and location-based directions around the world.">
   <title>Borderless Local — World Travel Guide</title>
-  <link rel="stylesheet" href="styles.css?v=local-guides-4">
+  <link rel="stylesheet" href="styles.css?v=install-fix-2">
   <script src="cities500.js?v=local-guides-4" defer></script>
   <script src="script.js?v=local-guides-4" defer></script>
   <link rel="manifest" href="manifest.webmanifest">
@@ -14,7 +14,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Borderless Local">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <script src="install.js" defer></script>
+  <script src="install.js?v=install-fix-2" defer></script>
 </head>
 <body>
   <main class="shell">
@@ -60,8 +60,8 @@
       <a class="android-download-button" href="https://github.com/mahbubhasanoly5-arch/borderless-local-assistant/releases/download/v0.3.1-preview/Borderless-Local-0.3.1-debug.apk">Download Android App 0.3.1 ↓</a>
     </section>
     <section class="android-download" aria-label="Use on iPhone">
-      <div><span class="eyebrow">YOUR IPHONE TRAVEL COMPANION</span><h2>Keep Borderless Local on your iPhone</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. Turn on Open as Web App if shown, then tap Add. Your guide opens from its own icon. Internet is required.</p><p lang="bn">Safari-তে খোলো → Share → Add to Home Screen → Add। আলাদা icon থেকে guide খুলতে পারবে। Internet লাগবে।</p><p id="install-status" role="status" aria-live="polite"></p></div>
-      <button class="android-download-button" id="install-app" type="button" hidden>Install web app</button>
+      <div><span class="eyebrow">YOUR IPHONE TRAVEL COMPANION</span><h2>Keep Borderless Local on your iPhone</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. Turn on Open as Web App if shown, then tap Add. Your guide opens from its own icon. Internet is required.</p><p lang="bn">Safari-তে খোলো → Share → Add to Home Screen → Add। আলাদা icon থেকে guide খুলতে পারবে। Internet লাগবে।</p><p id="install-status" class="no-translate" role="status" aria-live="polite"></p><p id="install-help" class="no-translate" tabindex="-1" hidden></p></div>
+      <button class="android-download-button no-translate" id="install-app" type="button" aria-controls="install-help" aria-expanded="false">Add app to your device</button>
     </section>
     <section class="search-panel picker" aria-label="Choose a destination">
       <div class="panel-heading"><span class="panel-number">01</span><div><span class="eyebrow" id="select-kicker">PICK A DESTINATION</span><h2 id="country-label">Where would you like to go?</h2></div></div>
