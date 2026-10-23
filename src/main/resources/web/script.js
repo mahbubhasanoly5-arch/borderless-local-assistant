@@ -810,42 +810,80 @@ function runSearch(){
  if(hits.length){
   country.value=hits[0].d.country;refreshCities();city.value=hits[0].c.name;updateCitySelection();closeCityPicker();renderDestination();
  setStatus(hits.length>1?(language.value==='bn'?hits.length+'টি মিলেছে; প্রথমটি দেখানো হচ্ছে।':hits.length+' matching destinations; showing the first.'):'' );
- }else{$('results').hidden=true;setStatus(strings().empty)}
+ }else{$('results').hidden=true;searchOwnPlace(term)}
 }
 function distanceKm(a,b){
  const rad=value=>value*Math.PI/180,lat1=rad(a[0]),lat2=rad(b[0]),dLat=lat2-lat1,dLon=rad(b[1]-a[1]);
  const value=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
  return 6371*2*Math.atan2(Math.sqrt(value),Math.sqrt(1-value));
 }
+let globalLocationsPromise;
+function loadGlobalLocations(){
+ if(window.BORDERLESS_LOCATIONS)return Promise.resolve(window.BORDERLESS_LOCATIONS);
+ if(globalLocationsPromise)return globalLocationsPromise;
+ globalLocationsPromise=new Promise((resolve,reject)=>{
+  const tag=document.createElement('script');tag.src='global-locations.js?v=world-location-1';
+  tag.onload=()=>Array.isArray(window.BORDERLESS_LOCATIONS)?resolve(window.BORDERLESS_LOCATIONS):reject(new Error('Missing directory'));
+  tag.onerror=()=>{globalLocationsPromise=null;tag.remove();reject(new Error('Directory unavailable'))};document.head.append(tag);
+ });return globalLocationsPromise;
+}
+async function selectLocationRow(row){
+ const d=destinations.find(item=>countryCodes[item.country]===row[2]);
+ if(!d)throw new Error('Country unavailable');
+ await loadCountryCities(row[2]);cityCatalogCache.delete(d.country);
+ const catalog=citiesForCountry(d);
+ if(!catalog.some(item=>item.name===row[0]))catalog.push({name:row[0],asciiName:row[1],adminCode:row[5],featured:false});
+ country.value=d.country;refreshCities();city.value=row[0];updateCitySelection();closeCityPicker();search.value='';renderDestination();
+ return d;
+}
 function useMyLocation(){
  const s=strings(),control=$('location-button');
  if(!navigator.geolocation){setStatus(s.locationUnsupported);return}
  control.disabled=true;setStatus(s.locating);
  navigator.geolocation.getCurrentPosition(async position=>{
-  currentLocation={latitude:position.coords.latitude,longitude:position.coords.longitude};
-  const here=[position.coords.latitude,position.coords.longitude];let nearest=null;
-  const accuracyKm=position.coords.accuracy/1000;
-  if(!Number.isFinite(accuracyKm)||accuracyKm>20){control.disabled=false;setStatus(language.value==='bn'?'অবস্থান যথেষ্ট নির্ভুল নয়। Precise location চালু করে আবার চেষ্টা করুন, অথবা শহর নিজে বেছে নিন।':'Location is too approximate. Enable precise location and try again, or choose your city.');return}
-  const matches=[];
-  destinations.forEach(d=>d.cities.forEach(c=>{
-   const point=cityCoordinates[c.name];if(!point)return;
-   const distance=distanceKm(here,point);matches.push({d,c,distance});
-  }));
-  const japan=destinations.find(d=>d.country==='Japan');
-  if(japan){for(const name of ['Osaka','Kobe','Nara','Sakai'])matches.push({d:japan,c:{name},distance:distanceKm(here,cityCoordinates[name])})}
-  matches.sort((a,b)=>a.distance-b.distance);nearest=matches[0];
-  control.disabled=false;
-  if(!nearest){setStatus(s.locationUnsupported);return}
-  if(matches[1]&&matches[1].distance-nearest.distance<accuracyKm*2){setStatus(language.value==='bn'?'অবস্থান থেকে শহর নিশ্চিত করা যাচ্ছে না। শহর নিজে বেছে নিন।':'Your location is not precise enough to choose between nearby cities. Please choose your city.');return}
   try{
-   const code=countryCodes[nearest.d.country];if(code)await loadCountryCities(code);
-   cityCatalogCache.delete(nearest.d.country);
-  }catch{setStatus(language.value==='bn'?'শহরের তালিকা লোড হয়নি। আবার চেষ্টা করুন।':'Could not load the city list. Please try again.');return}
-  country.value=nearest.d.country;refreshCities();city.value=nearest.c.name;updateCitySelection();closeCityPicker();search.value='';
-  if(nearest.distance>100){setStatus(s.locationFar+' '+nearest.c.name+' ('+Math.round(nearest.distance)+' km).');$('results').hidden=true;return}
-  renderDestination();setStatus(s.locationFound+' '+nearest.c.name+' · '+Math.round(nearest.distance)+' km '+(language.value==='bn'?'শহরের কেন্দ্র থেকে; এটি আনুমানিক city match।':'from its centre; approximate city match.'));
-  $('results').scrollIntoView({behavior:'smooth',block:'start'});
+   const {latitude,longitude,accuracy}=position.coords;
+   if(!Number.isFinite(latitude)||!Number.isFinite(longitude)||!Number.isFinite(accuracy)||accuracy>20000){
+    setStatus(language.value==='bn'?'অবস্থান যথেষ্ট নির্ভুল নয়। Precise location চালু করুন, অথবা নিজের শহরের নাম লিখে খুঁজুন।':'Location is too approximate. Enable precise location, or search for your own city.');return;
+   }
+   currentLocation={latitude,longitude};
+   const rows=await loadGlobalLocations(),here=[latitude,longitude];
+   let nearest=null,second=null;
+   const supportedCodes=new Set(destinations.map(d=>countryCodes[d.country]));
+   for(const row of rows){
+    if(row[7]==='PPLX'||!supportedCodes.has(row[2]))continue;
+    const distance=distanceKm(here,[row[3],row[4]]);
+    if(!nearest||distance<nearest.distance){second=nearest;nearest={row,distance}}
+    else if(!second||distance<second.distance)second={row,distance};
+   }
+   if(!nearest||nearest.distance>50){setStatus(language.value==='bn'?'কাছাকাছি শহর নিশ্চিত করা যায়নি। নিজের শহরের নাম লিখে খুঁজুন।':'Could not identify a nearby city. Search for your own city.');return}
+   if(second&&second.distance-nearest.distance<accuracy/500){
+    setStatus(language.value==='bn'?'অবস্থানটি কয়েকটি শহরের মধ্যে পড়ছে। নিজের শহরের নাম লিখে বেছে নিন।':'Location is uncertain between nearby places. Search and choose your own city.');return;
+   }
+   const d=await selectLocationRow(nearest.row);
+   setStatus((language.value==='bn'?'কাছের শহর (আনুমানিক): ':'Nearby city (approximate): ')+nearest.row[0]+', '+d.country+' · '+nearest.distance.toFixed(1)+' km · '+(language.value==='bn'?'অবস্থানের নির্ভুলতা ±':'Location accuracy ±')+Math.round(accuracy)+' m. '+(language.value==='bn'?'ভুল হলে নিজের শহরের নাম লিখে খুঁজুন।':'If this is incorrect, search for your own city.'));
+   $('results').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch{setStatus(language.value==='bn'?'শহরের তথ্য লোড হয়নি। আবার চেষ্টা করুন অথবা দেশ ও শহর বেছে নিন।':'Could not load city data. Try again or choose a country and city.')}
+  finally{control.disabled=false}
  },()=>{control.disabled=false;setStatus(s.locationDenied)},{enableHighAccuracy:true,timeout:25000,maximumAge:0});
+}
+let placeSearchRun=0;
+async function searchOwnPlace(term){
+ const run=++placeSearchRun;
+ setStatus(language.value==='bn'?'বিশ্বের শহরের তালিকায় খোঁজা হচ্ছে…':'Searching the worldwide city directory…');
+ try{
+  const rows=await loadGlobalLocations();if(run!==placeSearchRun||search.value.trim().toLocaleLowerCase()!==term)return;
+  const normalize=value=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
+  const query=normalize(term),matches=rows.filter(row=>normalize(row[0]).includes(query)||normalize(row[1]).includes(query));
+  matches.sort((a,b)=>Number(normalize(b[0])===query||normalize(b[1])===query)-Number(normalize(a[0])===query||normalize(a[1])===query)||b[6]-a[6]);
+  if(!matches.length){setStatus(strings().empty);return}
+  setStatus(language.value==='bn'?'নিজের জায়গা বেছে নিন:':'Choose your place:');
+  for(const row of matches.slice(0,20)){
+   const d=destinations.find(item=>countryCodes[item.country]===row[2]);if(!d)continue;
+   const button=document.createElement('button');button.type='button';button.className='entry-link';button.textContent=row[0]+', '+d.country+' · '+row[5];
+   button.addEventListener('click',async()=>{try{await selectLocationRow(row);setStatus('');$('results').scrollIntoView({behavior:'smooth',block:'start'})}catch{setStatus(language.value==='bn'?'তথ্য লোড হয়নি। আবার চেষ্টা করুন।':'Could not load this place. Please try again.')}});$('status').append(' ',button);
+  }
+ }catch{if(run===placeSearchRun)setStatus(language.value==='bn'?'শহরের তালিকা লোড হয়নি। আবার চেষ্টা করুন।':'Could not load the city directory. Please try again.')}
 }
 language.addEventListener('change',applyLanguage);
 country.addEventListener('input',()=>{renderCountryOptions(country.value,true);updateCountrySelection()});
@@ -867,7 +905,8 @@ city.addEventListener('input',()=>{
 });
 city.addEventListener('change',()=>{if(updateCitySelection()){closeCityPicker();renderDestination();$('results').scrollIntoView({behavior:'smooth',block:'start'})}});
 city.addEventListener('keydown',event=>{if(event.key==='Escape')closeCityPicker()});
-search.addEventListener('input',runSearch);
+let searchDebounce;
+search.addEventListener('input',()=>{clearTimeout(searchDebounce);searchDebounce=setTimeout(runSearch,300)});
 applyLanguage();
 function restoreDestinationFromUrl(){
  const params=new URLSearchParams(window.location.search),requestedCountry=params.get('country'),requestedCity=params.get('city');
