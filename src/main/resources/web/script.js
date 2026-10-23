@@ -192,6 +192,7 @@ const cityCoordinates = {
  'Bali (Denpasar)':[-8.6500,115.2167],'Jakarta':[-6.2088,106.8456],
  'Rome':[41.9028,12.4964],'Florence':[43.7696,11.2558],
  'Tokyo':[35.6762,139.6503],'Kyoto':[35.0116,135.7681],
+ 'Osaka':[34.6937,135.5023],'Kobe':[34.6901,135.1956],'Nara':[34.6851,135.8048],'Sakai':[34.5733,135.4831],
  'Kuala Lumpur':[3.1390,101.6869],'George Town (Penang)':[5.4141,100.3288],
  'Mexico City':[19.4326,-99.1332],'Cancún':[21.1619,-86.8515],
  'Marrakech':[31.6295,-7.9811],'Fes':[34.0181,-5.0078],
@@ -820,20 +821,31 @@ function useMyLocation(){
  const s=strings(),control=$('location-button');
  if(!navigator.geolocation){setStatus(s.locationUnsupported);return}
  control.disabled=true;setStatus(s.locating);
- navigator.geolocation.getCurrentPosition(position=>{
+ navigator.geolocation.getCurrentPosition(async position=>{
   currentLocation={latitude:position.coords.latitude,longitude:position.coords.longitude};
   const here=[position.coords.latitude,position.coords.longitude];let nearest=null;
+  const accuracyKm=position.coords.accuracy/1000;
+  if(!Number.isFinite(accuracyKm)||accuracyKm>20){control.disabled=false;setStatus(language.value==='bn'?'অবস্থান যথেষ্ট নির্ভুল নয়। Precise location চালু করে আবার চেষ্টা করুন, অথবা শহর নিজে বেছে নিন।':'Location is too approximate. Enable precise location and try again, or choose your city.');return}
+  const matches=[];
   destinations.forEach(d=>d.cities.forEach(c=>{
    const point=cityCoordinates[c.name];if(!point)return;
-   const distance=distanceKm(here,point);if(!nearest||distance<nearest.distance)nearest={d,c,distance};
+   const distance=distanceKm(here,point);matches.push({d,c,distance});
   }));
+  const japan=destinations.find(d=>d.country==='Japan');
+  if(japan){for(const name of ['Osaka','Kobe','Nara','Sakai'])matches.push({d:japan,c:{name},distance:distanceKm(here,cityCoordinates[name])})}
+  matches.sort((a,b)=>a.distance-b.distance);nearest=matches[0];
   control.disabled=false;
   if(!nearest){setStatus(s.locationUnsupported);return}
+  if(matches[1]&&matches[1].distance-nearest.distance<accuracyKm*2){setStatus(language.value==='bn'?'অবস্থান থেকে শহর নিশ্চিত করা যাচ্ছে না। শহর নিজে বেছে নিন।':'Your location is not precise enough to choose between nearby cities. Please choose your city.');return}
+  try{
+   const code=countryCodes[nearest.d.country];if(code)await loadCountryCities(code);
+   cityCatalogCache.delete(nearest.d.country);
+  }catch{setStatus(language.value==='bn'?'শহরের তালিকা লোড হয়নি। আবার চেষ্টা করুন।':'Could not load the city list. Please try again.');return}
   country.value=nearest.d.country;refreshCities();city.value=nearest.c.name;updateCitySelection();closeCityPicker();search.value='';
   if(nearest.distance>100){setStatus(s.locationFar+' '+nearest.c.name+' ('+Math.round(nearest.distance)+' km).');$('results').hidden=true;return}
-  renderDestination();setStatus(s.locationFound+' '+nearest.c.name+' · '+Math.round(nearest.distance)+' km from its city centre (approx.).');
+  renderDestination();setStatus(s.locationFound+' '+nearest.c.name+' · '+Math.round(nearest.distance)+' km '+(language.value==='bn'?'শহরের কেন্দ্র থেকে; এটি আনুমানিক city match।':'from its centre; approximate city match.'));
   $('results').scrollIntoView({behavior:'smooth',block:'start'});
- },()=>{control.disabled=false;setStatus(s.locationDenied)},{enableHighAccuracy:false,timeout:12000,maximumAge:300000});
+ },()=>{control.disabled=false;setStatus(s.locationDenied)},{enableHighAccuracy:true,timeout:25000,maximumAge:0});
 }
 language.addEventListener('change',applyLanguage);
 country.addEventListener('input',()=>{renderCountryOptions(country.value,true);updateCountrySelection()});
