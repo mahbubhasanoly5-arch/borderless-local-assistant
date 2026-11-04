@@ -1,0 +1,22 @@
+name: borderless_local_assistant
+description: Travel and study abroad city guide.
+publish_to: none
+version: 0.9.0+13
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  geolocator: ^14.1.2
+  shared_preferences: ^2.5.6
+  url_launcher: ^6.3.3
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/destinations.json
+    - assets/public_rules.json
+    - assets/world_locations.json
+    - assets/world_countries.json

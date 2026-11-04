@@ -1,0 +1,86 @@
+{
+  "Bangladesh": {
+    "students": [],
+    "rules": [
+      {
+        "url": "https://www.gov.uk/foreign-travel-advice/bangladesh/safety-and-security",
+        "en": "FCDO advises keeping copies of your passport photo page and visa, and dressing modestly. Treat dress guidance as cultural advice. Follow destination authorities for the applicable law.",
+        "bn": "FCDO passport-এর photo page ও visa-এর copy রাখা এবং শালীন পোশাক পরার পরামর্শ দেয়। পোশাকের বিষয়টি সাংস্কৃতিক পরামর্শ; প্রযোজ্য আইনের জন্য স্থানীয় কর্তৃপক্ষ দেখুন।",
+        "checked": "2026-10-22"
+      }
+    ]
+  },
+  "Canada": {
+    "students": [
+      {
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada/work/work-off-campus.html",
+        "en": "Eligible students may work off campus up to 24 hours per week during regular terms. This is not permission for every student: permit conditions, enrolment and other eligibility requirements apply. Check IRCC before starting work.",
+        "bn": "যোগ্য শিক্ষার্থীরা regular term-এ off-campus সর্বোচ্চ সপ্তাহে 24 ঘণ্টা কাজ করতে পারেন। সবার জন্য অনুমতি নয়: permit, enrolment ও অন্যান্য শর্ত প্রযোজ্য। কাজ শুরুর আগে IRCC যাচাই করুন।",
+        "checked": "2026-10-22"
+      }
+    ],
+    "rules": []
+  },
+  "Australia": {
+    "students": [
+      {
+        "url": "https://immi.homeaffairs.gov.au/visas/already-have-a-visa/check-visa-details-and-conditions/see-your-visa-conditions?vcid=18",
+        "en": "Most student visa holders have a 48-hour per fortnight work limit while their course is in session. Course-start restrictions and exceptions, including certain research degrees, apply. Read the conditions attached to your own visa.",
+        "bn": "অধিকাংশ student visa holder-এর course চলাকালে প্রতি fortnight-এ 48 ঘণ্টা কাজের সীমা আছে। Course শুরুর শর্ত ও কিছু research degree-র exception প্রযোজ্য। নিজের visa conditions পড়ুন।",
+        "checked": "2026-10-22"
+      }
+    ],
+    "rules": []
+  },
+  "Thailand": {
+    "students": [],
+    "rules": [
+      {
+        "url": "https://www.gov.uk/foreign-travel-advice/thailand/safety-and-security",
+        "en": "FCDO states that flying an unregistered drone is illegal; registration requirements also apply on entry or purchase. Do not give your passport to rental businesses as a deposit. Read the full official guidance before hiring or flying.",
+        "bn": "FCDO অনুযায়ী unregistered drone ওড়ানো বেআইনি; দেশে প্রবেশ বা কেনার পর registration-এর শর্তও আছে। Rental business-এ deposit হিসেবে passport জমা দেবেন না। ব্যবহার করার আগে পুরো official guidance পড়ুন।",
+        "checked": "2026-10-22"
+      }
+    ]
+  },
+  "United Kingdom": {
+    "students": [
+      {
+        "url": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-student",
+        "en": "Term-time work permission depends on your course and sponsor: qualifying degree-level students may have a 20-hour limit, qualifying below-degree students 10 hours, and other study may permit no work. Confirm your own immigration conditions and prohibited job types.",
+        "bn": "Term-time কাজের অনুমতি course ও sponsor-এর ওপর নির্ভর করে: যোগ্য degree-level শিক্ষার্থীর 20 ঘণ্টা, below-degree-এর 10 ঘণ্টা সীমা হতে পারে; অন্য ক্ষেত্রে কাজের অনুমতি নাও থাকতে পারে। নিজের visa conditions ও নিষিদ্ধ কাজ যাচাই করুন।",
+        "checked": "2026-10-22"
+      }
+    ],
+    "rules": []
+  },
+  "India": {
+    "students": [],
+    "rules": [
+      {
+        "url": "https://www.gov.uk/foreign-travel-advice/india/safety-and-security",
+        "en": "Alcohol rules differ by state. FCDO reports that smoking is illegal in most public places. Check the rules for your state and venue, and respect religious-site dress requirements.",
+        "bn": "Alcohol-এর নিয়ম রাজ্যভেদে আলাদা। FCDO অনুযায়ী অধিকাংশ public place-এ smoking নিষিদ্ধ। আপনার রাজ্য ও venue-এর বিধি এবং ধর্মীয় স্থানের পোশাকের নিয়ম যাচাই করুন।",
+        "checked": "2026-10-22"
+      }
+    ]
+  },
+  "Japan": {
+    "rules": [
+      {
+        "url": "https://www.japan.travel/en/plan/local-laws/",
+        "en": "JNTO advises visitors to carry their passport and use designated smoking areas. Residents should check immigration guidance for their status.",
+        "bn": "JNTO visitor-দের passport সঙ্গে রাখা ও designated smoking area ব্যবহারের পরামর্শ দেয়। Resident-রা নিজের status-এর immigration guidance দেখুন।",
+        "checked": "2026-10-22"
+      }
+    ],
+    "students": [
+      {
+        "url": "https://www.moj.go.jp/isa/support/guidance/index.html?hl=en",
+        "en": "Student part-time work requires permission for activities outside the student status. Confirm your permit conditions, residence expiry and registration with immigration authorities.",
+        "bn": "Student part-time কাজের আগে অতিরিক্ত activity permission প্রয়োজন। নিজের permit-এর শর্ত, residence expiry ও registration immigration authority-তে যাচাই করুন।",
+        "checked": "2026-10-22"
+      }
+    ]
+  }
+}

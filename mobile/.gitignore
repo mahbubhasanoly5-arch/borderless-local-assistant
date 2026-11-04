@@ -1,0 +1,16 @@
+.dart_tool/
+.flutter-plugins*
+build/
+android/local.properties
+*.jks
+*.p12
+*.keystore
+.signing/
+key.properties
+android/app/src/main/assets/web/
+
+windows/runner/resources/*.img
+*.pfx
+*.pem
+.env*
+
