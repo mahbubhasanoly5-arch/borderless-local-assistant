@@ -1,0 +1,36 @@
+name: Windows source build
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare pinned Flutter SDK
+        shell: pwsh
+        run: |
+          git clone --depth 1 --branch 3.47.7 https://github.com/flutter/flutter.git "$env:RUNNER_TEMP/flutter"
+          "$env:RUNNER_TEMP/flutter/bin" >> $env:GITHUB_PATH
+      - name: Resolve locked dependencies
+        working-directory: mobile
+        run: flutter pub get --enforce-lockfile
+      - name: Build native Windows release
+        working-directory: mobile
+        run: flutter build windows --release
+      - name: Include Microsoft C++ runtime
+        shell: pwsh
+        run: |
+          $taskVs = & "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe" -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          $taskCrt = Get-ChildItem "$taskVs/VC/Redist/MSVC" -Recurse -Directory -Filter '*.CRT' | Where-Object { $_.FullName -match '\\x64\\Microsoft\.VC' -and $_.FullName -notmatch '\\onecore\\' } | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $taskCrt) { throw 'C++ runtime not found' }
+          Copy-Item "$($taskCrt.FullName)/*.dll" 'mobile/build/windows/x64/runner/Release/'
+      - name: Upload unsigned Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Borderless-Local-Windows-unsigned
+          path: mobile/build/windows/x64/runner/Release/
+          if-no-files-found: error
+          retention-days: 14

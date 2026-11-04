@@ -60,3 +60,8 @@ Page title ও meta description আছে। Server runtime-এ public URL থ�
 ## Build
 
 Java 21 ও Maven install থাকলে project root-এ `mvn compile` চালিয়ে compile করা যায়। Container build-এ Maven 3.9 ও Java 21 ব্যবহার হয়। Browser app চালাতে `WebServer` run করতে হবে।
+
+## License and code signing policy
+Original project source is licensed under [MIT](LICENSE). Third-party components/data/media retain their own licenses: see [notices](THIRD_PARTY_NOTICES.md).
+[Code signing policy](CODE_SIGNING_POLICY.md): provider application is in preparation; current preview builds are unsigned.
+
