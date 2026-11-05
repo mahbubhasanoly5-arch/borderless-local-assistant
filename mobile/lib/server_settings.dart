@@ -1,3 +1,4 @@
+import 'app_info.dart';
 import 'app_language.dart';
 import 'platform_bridge.dart';
 import 'dart:convert';
@@ -101,6 +102,8 @@ class _ServerSettingsPageState extends State<ServerSettingsPage> {
         FilledButton.icon(onPressed: _checking || _saving || _url.text.trim().isEmpty ? null : _check,
           icon: const Icon(Icons.wifi_find), label: Text(t('Check connection', 'সংযোগ পরীক্ষা করো'))),
         TextButton(onPressed: _checking || _saving ? null : _save, child: Text(t('Save', 'সংরক্ষণ করো'))),
+        const Divider(),
+        ListTile(leading: const Icon(Icons.info_outline), title: Text(t('About, privacy and licenses', 'পরিচিতি, গোপনীয়তা ও লাইসেন্স')), trailing: const Icon(Icons.chevron_right), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppInfoPage()))),
         if (_checking || _saving) const Center(child: CircularProgressIndicator()),
         if (_status != null) Padding(padding: const EdgeInsets.symmetric(vertical: 16), child: Text(_status!)),
       ]))),
