@@ -1,3 +1,15 @@
+# 0.9.2 travel design preparation
+
+- Reference-inspired destination cover, forest/lagoon colours, translucent photo cards and rounded controls.
+- Original offline mountain illustration when destination photographs are unavailable; it is decorative, not a location photograph.
+- Existing language, city/world search, location confirmation, saved/recent guides, rules, transit, student information and checklist flows retained.
+- Coordinated website colours and landscape illustration.
+- Android CI preview workflow; no production signing or Store publication claimed.
+
+Local Dart formatting completed. Compilation and device visual verification remain pending for this redesign. The prior 0.9.1 Windows CI build passed; that does not validate 0.9.2.
+
+Remaining distribution work: SignPath response, trusted Windows signing/runtime screenshots, per-image Wikimedia attribution review, matching Store package and certification. Temporary CI debug keys may not match installed Android previews; never uninstall without preserving saved data.
+
 # 0.9.1 release preparation
 
 Prepared 2026-11-05; build and runtime verification pending.

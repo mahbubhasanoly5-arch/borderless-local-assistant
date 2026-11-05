@@ -187,3 +187,17 @@ footer span:nth-child(2){letter-spacing:0;font-size:9px}
 
 #install-app[hidden],#install-help[hidden]{display:none!important}
 #install-help{padding:14px 16px;background:#fff;border:1px solid #b7cbb8;border-radius:10px;line-height:1.7;font-size:14px;max-width:100%}#install-help:focus{outline:2px solid var(--green);outline-offset:3px}#install-app:disabled{opacity:.65;cursor:wait}
+
+/* Travel collection: coordinated with the native destination cards. */
+:root{--paper:#f4f5ed;--green:#215e59;--green-dark:#163f3b;--lime:#dbedb5}
+.hero-art{border-radius:34px;background:radial-gradient(circle at 78% 20%,#f5e9bd 0 8%,transparent 8.5%),linear-gradient(165deg,#80b9c3,#315f65 65%,#183e3e);box-shadow:0 22px 40px #163f3b20}
+.hero-art:before{inset:0;border:0;border-radius:0;background:#53848a;clip-path:polygon(0 50%,25% 13%,49% 56%,75% 25%,100% 49%,100% 100%,0 100%);transform:none}
+.hero-art:after{inset:0;border:0;border-radius:0;background:#183e3e;clip-path:polygon(0 85%,22% 42%,50% 82%,76% 53%,100% 80%,100% 100%,0 100%);transform:none}
+.art-orbit,.art-sun,.art-pin,.art-line{display:none}
+.art-label{z-index:1;color:#f2f7eb}.label-top{left:24px;top:28px}.label-bottom{right:24px;bottom:26px}
+.search-panel,.info-card,.android-download{border-radius:24px}
+.search-panel{background:#ffffffdc;backdrop-filter:blur(14px);box-shadow:0 18px 40px #163f3b0d}
+.android-download{background:linear-gradient(130deg,#e2e9d5,#e7efea)}
+.android-download-button,.picker button{border-radius:24px}
+button:focus-visible,a:focus-visible{outline:3px solid #a66a28;outline-offset:4px}
+@media(max-width:650px){.hero-art{border-radius:26px}.search-panel{border-radius:22px}}
